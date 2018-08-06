@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
 
         /* socket options, tell the kernel we provide the IP structure */
 
+        
         if (setsockopt(s, IPPROTO_IP, IP_HDRINCL, &on, sizeof(on)) < 0)
 
         {
