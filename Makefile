@@ -6,7 +6,7 @@
 #    By: nithramir <nithramir@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/18 12:13:38 by nithramir         #+#    #+#              #
-#    Updated: 2018/08/02 18:16:38 by nithramir        ###   ########.fr        #
+#    Updated: 2018/08/10 03:13:06 by nithramir        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,9 @@ OBJ_PATH = ft_ping_obj
 H_FILES= ft_ping.h
 
 SRC = main.o\
+	  parse_options.o\
+	  ft_ping.o\
+	  cheksum.o\
 
 CC = gcc -g -I. -fsanitize=address
 

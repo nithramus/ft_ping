@@ -5,7 +5,7 @@
 #include <net/ethernet.h>
 #include <stdio.h>
 #include <netinet/in.h>
-#include <linux/ip.h>
+#include <netinet/ip.h>
 
 int main(int argc, char **argv)
 {
@@ -27,7 +27,8 @@ int main(int argc, char **argv)
     // printf("coucou%d\n", ret);
     // printf("%s\n", buff);
     int sock_r;
-    sock_r = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_IP));
+    printf("%d\n", IPPROTO_ICMP);
+    sock_r = socket(AF_INET, SOCK_RAW, 1);
     if (sock_r < 0)
     {
         perror("error: ");
@@ -38,9 +39,10 @@ int main(int argc, char **argv)
     // memset(buffer, 0, 65536);
     struct sockaddr saddr;
     int saddr_len = sizeof(saddr);
-
+    printf("beofre");
     //Receive a network packet and copy in to buffer
-    int buflen = recvfrom(sock_r, buffer, 65536, 0, &saddr, (socklen_t *)&saddr_len);
+    fork();
+    int buflen = recvfrom(sock_r, buffer, 65536, 0,(struct sockaddr *) &saddr, (socklen_t *)&saddr_len);
     if (buflen < 0)
     {
         printf("error in reading recvfrom function\n");
@@ -52,13 +54,14 @@ int main(int argc, char **argv)
     printf("\t|-Source Address : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X\n",eth->h_source[0],eth->h_source[1],eth->h_source[2],eth->h_source[3],eth->h_source[4],eth->h_source[5]);
     printf("\t|-Destination Address : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X\n",eth->h_dest[0],eth->h_dest[1],eth->h_dest[2],eth->h_dest[3],eth->h_dest[4],eth->h_dest[5]);
     printf("\t|-Protocol : %d\n",eth->h_proto);
-    struct iphdr *ips = (struct iphdr*)(buffer + sizeof(struct ethhdr));
+    struct ip *ips = (struct ip*)(buffer);
     // printf("%s\n", inet_ntoa(ips->daddr));
 
     struct sockaddr_in source;
-    source.sin_addr.s_addr = ips->daddr;
+    source.sin_addr = ips->ip_dst;
     printf("%s\n", inet_ntoa(source.sin_addr));
-    source.sin_addr.s_addr = ips->saddr;
+    source.sin_addr = ips->ip_src;
     printf("%s\n", inet_ntoa(source.sin_addr));
+    printf("%hu\n", ips->ip_id);
     return (1);
 }
